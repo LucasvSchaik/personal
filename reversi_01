@@ -1,0 +1,100 @@
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
+
+Application.Run(new Screen());
+
+
+public class Screen : Form
+{
+    //Declaraties 
+    int n = 0;
+    public int[,] board;
+    int rows = 6;
+    int columns = 6;
+    int size = 50;
+    int x, y;
+
+    Button restart, help;
+    PictureBox grid;
+
+    public Screen()
+    {
+        x = size * rows;
+        y = size * columns;
+        board = new int[rows, columns];
+
+        drawGUI();
+        grid.Paint += drawGrid;
+        grid.MouseClick += gridClick;
+
+    }
+    /*
+     TO DO
+         Methoden:
+            OnClick
+            {
+            Translate de muispositie naar de positie in de.
+            Is deze positie legaal.
+            Steen neerzetten
+            Andere stenen omzetten
+            Check of spel klaar is
+            }
+            
+
+     
+     */
+
+
+    private void drawGrid(object o, PaintEventArgs pea)
+    {
+        Pen pen = new Pen(Color.Black);
+
+
+        for (int z = 0; z <= columns; z++)
+            pea.Graphics.DrawLine(pen, z * size, 0, z * size, y);
+
+        for (int k = 0; k <= rows; k++)
+            pea.Graphics.DrawLine(pen, 0, k * size, x, k * size);
+    }
+
+    public void drawGUI()
+    {
+        ClientSize = new Size(125 + x, 275 + y);
+        BackColor = Color.Wheat;
+        Text = "Reversi";
+
+
+        restart = new Button();
+        restart.Size = new Size(80, 30);
+        restart.Location = new Point(ClientSize.Width/4, 10);
+        restart.BackColor = Color.White;
+        restart.Text = "Nieuw spel";
+        Controls.Add(restart);
+
+        help= new Button();
+        help.Size = new Size(80, 30);
+        help.Location = new Point(2*ClientSize.Width/4, 10);
+        help.BackColor = Color.White;
+        help.Text = "Help";
+        Controls.Add(help);
+
+        grid = new PictureBox();
+        grid.Location = new Point(25, 175);
+        grid.Size = new Size(x+1, y+1);
+        grid.BackColor = Color.White;
+        Controls.Add(grid);  
+
+    }
+
+    private void gridClick(object ob, MouseEventArgs mea)
+    {   /* Waarden van mea omzetten in bijbehorende waardes om te gebruiken in array,
+         een mea(125,75) zal hierdoor (3,2) worden */
+        int xBoard = (int)Math.Ceiling(Convert.ToDouble(mea.X / size));
+        int yBoard = (int)Math.Ceiling(Convert.ToDouble(mea.Y / size));
+
+    }
+}
+
