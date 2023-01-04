@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
+using System.Drawing.Configuration;
 
 Application.Run(new Screen());
 
@@ -16,6 +17,9 @@ public class Screen : Form
     int columns = 6;
     int size = 50;
     int x, y;
+    int turnCount = 0;
+    public int xBoard;
+    public int yBoard;
 
     Button restart, help;
     PictureBox grid;
@@ -25,6 +29,7 @@ public class Screen : Form
         x = size * rows;
         y = size * columns;
         board = new int[rows, columns];
+        
 
         drawGUI();
         grid.Paint += drawGrid;
@@ -36,7 +41,7 @@ public class Screen : Form
          Methoden:
             OnClick
             {
-            Translate de muispositie naar de positie in de.
+            Translate de muispositie naar de positie in de array.   [DONE]
             Is deze positie legaal.
             Steen neerzetten
             Andere stenen omzetten
@@ -89,11 +94,36 @@ public class Screen : Form
 
     }
 
-    private void gridClick(object ob, MouseEventArgs mea)
+    public void gridClick(object ob, MouseEventArgs mea)
     {   /* Waarden van mea omzetten in bijbehorende waardes om te gebruiken in array,
          een mea(125,75) zal hierdoor (3,2) worden */
-        int xBoard = (int)Math.Ceiling(Convert.ToDouble(mea.X / size));
-        int yBoard = (int)Math.Ceiling(Convert.ToDouble(mea.Y / size));
+         xBoard = (int)Math.Ceiling(Convert.ToDouble(mea.X / size));
+         yBoard = (int)Math.Ceiling(Convert.ToDouble(mea.Y / size));
+
+        if (/*Move is valid*/)
+        {
+            if (turnCount %2 == 0) //Rood aan zet
+            {
+                board[xBoard, yBoard] = 1;
+                Color color = Color.Red;
+
+            }
+            else if (turnCount %2 == 1) //Blauw aan zet
+            {
+                board[xBoard, yBoard] = 2;
+                Color color = Color.Blue;
+            }
+            turnCount++;
+        }
+
+
+    }
+    private void drawPiece(int x, int y, Color color)
+    {
+        x = xBoard * size - size;
+        y = yBoard * size - size;
+        System.Drawing.Graphics gr = this.CreateGraphics();
+        gr.FillEllipse (new SolidBrush(color), x, y, 48, 48);
 
     }
 }
