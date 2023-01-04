@@ -1,4 +1,4 @@
-uusing System;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Threading.Tasks;
@@ -121,18 +121,58 @@ public class Screen : Form
 
     }
 
-    private void isValid()
-    {
-        
-    }
+ 
     private void drawPiece(int x, int y, Color color)
     {
         x = xBoard * size;
         y = yBoard * size;
         Graphics gr = grid.CreateGraphics();
         
-        gr.FillEllipse (new SolidBrush(color), x, y, 48, 48);
+        gr.FillEllipse (new SolidBrush(color), x+2, y+2, 46, 46);
 
     }
+/*    //Check whether there is a piece of the player in one of the rows adjacent to placed piece
+    bool CheckLine(int[,] board, int xB, int yB, int xBDelta, int yBDelta, int currentplayer)
+    {
+        // check whether the next position is out of bounds
+        if (xB < 0 || xB > rows || yB < 0 || yB > columns || board[xB, yB] == 0)
+        {
+            return false;
+        }
+        // check whether the next position is indeed a piece of the player
+        if (board[xB, yB] == currentplayer)
+        {
+            return true;
+        }
+        //loop the bool to run again (check next cell in same direction
+        return CheckLine(board, xB + xBDelta, yB + yBDelta, xBDelta, yBDelta, currentplayer);
+    }
+    bool isLegal(int[,] board, int currentplayer)
+    {
+        if (board[xBoard, yBoard] != 0)
+        {
+            return false;
+        }
+
+        for (int xB = -1; xB <= 1; xBoard++)
+        {
+            for (int yB = -1; yB <= 1; yBoard++)
+            {
+                if (xB == 0 && yB == 0)
+                {
+                    continue;
+                }
+                if (board[xBoard + xB, yBoard + yB] == otherplayer)
+                {
+                    if (CheckLine(board, xBoard + xB, yBoard + yB, xB, yB, currentplayer))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }*/
 }
+
 
