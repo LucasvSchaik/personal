@@ -1,4 +1,4 @@
-using System;
+uusing System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Threading.Tasks;
@@ -100,29 +100,37 @@ public class Screen : Form
          xBoard = (int)Math.Ceiling(Convert.ToDouble(mea.X / size));
          yBoard = (int)Math.Ceiling(Convert.ToDouble(mea.Y / size));
 
-        if (/*Move is valid*/)
+        if (1==1)
         {
             if (turnCount %2 == 0) //Rood aan zet
             {
                 board[xBoard, yBoard] = 1;
                 Color color = Color.Red;
+                drawPiece(xBoard, yBoard, color);
 
             }
             else if (turnCount %2 == 1) //Blauw aan zet
             {
                 board[xBoard, yBoard] = 2;
                 Color color = Color.Blue;
+                drawPiece(xBoard, yBoard, color);
             }
             turnCount++;
         }
 
 
     }
+
+    private void isValid()
+    {
+        
+    }
     private void drawPiece(int x, int y, Color color)
     {
-        x = xBoard * size - size;
-        y = yBoard * size - size;
-        System.Drawing.Graphics gr = this.CreateGraphics();
+        x = xBoard * size;
+        y = yBoard * size;
+        Graphics gr = grid.CreateGraphics();
+        
         gr.FillEllipse (new SolidBrush(color), x, y, 48, 48);
 
     }
