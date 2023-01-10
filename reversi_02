@@ -1,0 +1,248 @@
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
+using System.Drawing.Configuration;
+using System.Linq;
+
+Application.Run(new Screen());
+
+
+public class Screen : Form
+{
+    //Declaraties 
+    int n = 0;
+    public int[,] board;
+    int rows = 6;
+    int columns = 6;
+    int size = 50;
+    int x, y;
+    int turnCount = 0;
+    public int xBoard;
+    public int yBoard;
+    bool helpStatus = false;
+    
+
+    Button restart, help;
+    PictureBox grid;
+    Label txt;
+    public Screen()
+    {
+        x = size * rows;
+        y = size * columns;
+        board = new int[rows, columns];
+        board[3, 3] = 1;
+        board[3, 4] = 2;
+        board[4, 3] = 2;
+        board[4, 4] = 1;
+
+
+        DrawGUI();
+
+        grid.Paint += DrawGrid;
+        IsValid();
+        DrawStart();
+        grid.MouseClick += GridClick;
+        restart.Click += RestartGame;
+    }
+    /*
+     TO DO
+         Methoden:
+            OnClick
+            {
+            Translate de muispositie naar de positie in de array.   [DONE]
+            Is deze positie legaal.
+            Steen neerzetten [DONE]
+            Andere stenen omzetten
+            Check of spel klaar is
+            }
+            
+
+     
+     */
+
+    private void RestartGame(object o, EventArgs e)
+    {
+        turnCount = 0;
+        Array.Clear(board, 0, board.Length);
+        grid.Invalidate();
+    }
+    private void HelpClick(object o, EventArgs e)
+    {
+        helpStatus = !helpStatus;
+        grid.Invalidate();
+    }
+    private void DrawGrid(object o, PaintEventArgs pea)
+    {
+
+        Pen pen = new Pen(Color.Black);
+
+
+        for (int z = 0; z <= columns; z++)
+            pea.Graphics.DrawLine(pen, z * size, 0, z * size, y);
+
+        for (int k = 0; k <= rows; k++)
+            pea.Graphics.DrawLine(pen, 0, k * size, x, k * size);
+
+        for (int x= 0; x <= columns; x++)
+        {
+            for (int y = 0; y <= rows; y++)
+            {
+                if (helpStatus == true && board[xBoard,yBoard]==0)
+                {
+                    pea.Graphics.FillEllipse(new SolidBrush(Color.Gray), x * size + 2, y * size + 2, 46, 46);
+                }
+            }
+
+        }
+        //De startpos met deze 4 stenen werkt niet, ze flikkeren heel kort maar worden ergens geoverride
+
+
+    }
+
+    private void DrawStart()
+    {
+        DrawPiece(columns / 2 - 1, rows / 2 - 1, Color.Blue);
+        DrawPiece(columns / 2 - 1, rows / 2, Color.Red);
+        DrawPiece(columns / 2, rows / 2 - 1, Color.Red);
+        DrawPiece(columns / 2, rows / 2, Color.Blue);
+
+    }
+
+    public void DrawGUI()
+    {
+        ClientSize = new Size(125 + x, 275 + y);
+        BackColor = Color.Wheat;
+        Text = "Reversi";
+
+
+        restart = new Button();
+        restart.Size = new Size(80, 30);
+        restart.Location = new Point(ClientSize.Width/4, 10);
+        restart.BackColor = Color.White;
+        restart.Text = "Nieuw spel";
+        Controls.Add(restart);
+
+        help= new Button();
+        help.Size = new Size(80, 30);
+        help.Location = new Point(2*ClientSize.Width/4, 10);
+        help.BackColor = Color.White;
+        help.Text = "Help";
+        Controls.Add(help);
+
+        grid = new PictureBox();
+        grid.Location = new Point(25, 175);
+        grid.Size = new Size(x+1, y+1);
+        grid.BackColor = Color.White;
+        Controls.Add(grid);
+        
+        txt = new Label();
+        txt.Location = new Point(10, 60);
+        txt.Size = new Size(60, 160);
+        txt.BackColor= Color.White;
+        Controls.Add(txt);
+
+        
+
+    }
+
+    public void GridClick(object ob, MouseEventArgs mea)
+    {   /* Waarden van mea omzetten in bijbehorende waardes om te gebruiken in array,
+         een mea(125,75) zal hierdoor (3,2) worden */
+         xBoard = (int)Math.Ceiling(Convert.ToDouble(mea.X / size));
+         yBoard = (int)Math.Ceiling(Convert.ToDouble(mea.Y / size));
+
+
+        if (1==1)
+        {
+            if (turnCount %2 == 0) //Rood aan zet
+            {
+                board[xBoard, yBoard] = 1;
+                DrawPiece(xBoard, yBoard, Color.Red);
+            }
+            else if (turnCount %2 == 1) //Blauw aan zet
+            {
+                board[xBoard, yBoard] = 2;
+                DrawPiece(xBoard, yBoard, Color.Blue);
+
+            }
+            turnCount++;
+        }
+
+
+    }
+
+ 
+    private void DrawPiece(int x, int y, Color color)
+    {
+        int xDraw = x * size;
+        int yDraw = y * size;
+        Graphics gr = grid.CreateGraphics();
+        
+        gr.FillEllipse (new SolidBrush(color), xDraw+2, yDraw+2, 46, 46);
+
+    }
+
+    private void IsValid()
+    {
+        for(int xOffset=-1; xOffset<2; xOffset++) 
+        {
+            int xOut = xBoard + xOffset;
+                for (int yOffset=-1; yOffset<2; yOffset++) 
+                {
+                int yOut = yBoard + yOffset;
+                txt.Text += xOut + "," + yOut+"\r\n";
+
+                    if (!(xOut==0&&yOut==0))
+                    {
+                        //Methode om vijandige pieces op te sporen etc.
+                    }
+                
+                }
+        }
+    }
+/*    //Check whether there is a piece of the player in one of the rows adjacent to placed piece
+    bool CheckLine(int[,] board, int xB, int yB, int xBDelta, int yBDelta, int currentplayer)
+    {
+        // check whether the next position is out of bounds
+        if (xB < 0 || xB > rows || yB < 0 || yB > columns || board[xB, yB] == 0)
+        {
+            return false;
+        }
+        // check whether the next position is indeed a piece of the player
+        if (board[xB, yB] == currentplayer)
+        {
+            return true;
+        }
+        //loop the bool to run again (check next cell in same direction
+        return CheckLine(board, xB + xBDelta, yB + yBDelta, xBDelta, yBDelta, currentplayer);
+    }
+    bool isLegal(int[,] board, int currentplayer)
+    {
+        if (board[xBoard, yBoard] != 0)
+        {
+            return false;
+        }
+
+        for (int xB = -1; xB <= 1; xBoard++)
+        {
+            for (int yB = -1; yB <= 1; yBoard++)
+            {
+                if (xB == 0 && yB == 0)
+                {
+                    continue;
+                }
+                if (board[xBoard + xB, yBoard + yB] == otherplayer)
+                {
+                    if (CheckLine(board, xBoard + xB, yBoard + yB, xB, yB, currentplayer))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }*/
+}
+
