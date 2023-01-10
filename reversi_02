@@ -74,23 +74,23 @@ public class Screen : Form
 
             for (int i = 0; i < rows; i++)
             {
-                Graphics gr = grid.CreateGraphics();
+                //Graphics gr = grid.CreateGraphics();
                 int xDraw = i * size;
                 int yDraw = j * size;
                 if (board[i,j]==1)
                 {
-                    gr.FillEllipse(new SolidBrush(Color.Red), xDraw + 2, yDraw + 2, 46, 46);
+                    pea.Graphics.FillEllipse(new SolidBrush(Color.Red), xDraw + 2, yDraw + 2, 46, 46);
                 }
                 if (board[i, j] == 2)
                 {
-                    gr.FillEllipse(new SolidBrush(Color.Blue), xDraw + 2, yDraw + 2, 46, 46);
+                    pea.Graphics.FillEllipse(new SolidBrush(Color.Blue), xDraw + 2, yDraw + 2, 46, 46);
                 }
 
             }
         }
-            
 
-/*        for (int x= 0; x <= columns; x++)
+
+        for (int x = 0; x <= columns; x++)
         {
             for (int y = 0; y <= rows; y++)
             {
@@ -100,7 +100,7 @@ public class Screen : Form
                 }
             }
 
-        }*/
+        }
 
 
     }
@@ -171,7 +171,7 @@ public class Screen : Form
 
             }
             turnCount++;
-            Refresh();
+            grid.Refresh();
         }
         
     }
